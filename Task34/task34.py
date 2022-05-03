@@ -2,32 +2,40 @@
 
 from random import randint
 
-# Метод вычисления степени многочлена (k) и высшего коэффициента (a). Допустимые значения k >= 1 a >= 0
-
-def coef(str, str_need):                
-    index_s = str.find(str_need)
-    if index_s != -1:
-        if str_need == '*x**':
-            index_f = str.find(' ')
-            k = int(str[index_s+4:index_f])
+def koef(str):
+    last_digit = False
+    index_s = str.find('x')
+    index_f = str.find(' ')
+    if index_s !=-1:
+        if index_s == 0:
+            a = 1
         else:
-            index_f = str.find(' ')
+            a = int(str[0:index_s-1])
+        if str[index_s+1:index_s+3] == '**':
+            k = int(str[index_s+3:index_f])
+            str = str[index_f + 3:]
+        else:
             k = 1
-        a = int(str[0:index_s])
-        str = str[index_f + 3:]
+            str = str[index_f + 3:]
     else:
-        k = index_s
-    return str, k, a
+        k = 0
+        last_digit = True
+        if len(str) > 3:
+            a = int(str[:3])
+        else:
+            a = 0
+    return str, k, a, last_digit
 
 def receive_index(str1):
-    str1_list = coef(str1, '*x**')
+    str1_list = koef(str1)
+
     list1 = [0 for item in range(str1_list[1]+1)]
     list1[str1_list[1]] = str1_list[2]
     str1 = str1_list[0]
-    str1_list = coef(str1, '*x')     # вычисление 1 коэффициента
-    list1[1] = str1_list[2]
-    str1 = str1_list[0]              # вычисление 0 коэффициента
-    list1[0] = int(str1[:3])
+    while not str1_list[3]:
+        str1_list = koef(str1)
+        str1 = str1_list[0]
+        list1[str1_list[1]] = str1_list[2]
     return list1
 
 def mult(list, k):
@@ -73,7 +81,7 @@ print(str2)
 list1 = receive_index(str1)
 list2 = receive_index(str2)
 
-print(list1, list2)
+print(list1, "\n" ,list2)
 
 list3 = []
 for i in range(len(list1)):
