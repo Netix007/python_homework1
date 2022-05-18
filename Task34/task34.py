@@ -83,9 +83,11 @@ list2 = receive_index(str2)
 
 print(list1, "\n" ,list2)
 
-list3 = []
-for i in range(len(list1)):
-    list3.append(list1[i] + list2[i])
+if len(list1) < len(list2):
+    list1, list2 = list2, list1
+list3 = list1
+for i in range(len(list2)):
+    list3[i] += list2[i]
 
 print(list3)
 
